@@ -1,0 +1,61 @@
+module Test where
+
+import TradeFinance
+import Daml.Script
+
+-- Full lifecycle test (like your Foundry test suite)
+testTradeFinanceLifecycle : Script ()
+testTradeFinanceLifecycle = script do
+  -- Setup parties (like deploying from different accounts)
+  seller    <- allocateParty "GoldSeller"
+  buyer     <- allocateParty "InstitutionalBuyer"
+  regulator <- allocateParty "MENARegulator"
+
+  -- Step 1: Seller proposes a deal
+  proposalId <- submit seller do
+    createCmd DealProposal with
+      seller = seller
+      buyer = buyer
+      regulator = regulator
+      goldOunces = 100.0
+      pricePerOz = 1950.0
+
+  -- Step 2: Buyer accepts (creates TradeFinanceDeal)
+  dealId <- submit buyer do
+    exerciseCmd proposalId AcceptProposal
+
+  -- Step 3: Regulator approves
+  approvedDealId <- submit regulator do
+    exerciseCmd dealId ApproveDeal
+
+  -- Step 4: Buyer settles
+  settledDealId <- submit buyer do
+    exerciseCmd approvedDealId SettleDeal
+
+  -- Step 5: Try to dispute after settlement (should FAIL)
+  submitMustFail buyer do
+    exerciseCmd settledDealId DisputeDeal with
+      reason = "Too late — already settled"
+
+  return ()
+
+-- Test: unauthorized party cannot approve
+testUnauthorizedApproval : Script ()
+testUnauthorizedApproval = script do
+  seller    <- allocateParty "Seller"
+  buyer     <- allocateParty "Buyer"
+  regulator <- allocateParty "Regulator"
+  outsider  <- allocateParty "Outsider"
+
+  proposalId <- submit seller do
+    createCmd DealProposal with
+      seller; buyer; regulator; goldOunces = 50.0; pricePerOz = 2000.0
+
+  dealId <- submit buyer do
+    exerciseCmd proposalId AcceptProposal
+
+  -- Outsider tries to approve — must fail
+  submitMustFail outsider do
+    exerciseCmd dealId ApproveDeal
+
+  return ()

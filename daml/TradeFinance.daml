@@ -1,0 +1,100 @@
+module TradeFinance where
+
+-- ═══════════════════════════════════════════════
+-- Gold Token (like your ERC-20 at Chainscript)
+-- ═══════════════════════════════════════════════
+template GoldToken
+  with
+    issuer : Party          -- token creator (your 'owner')
+    holder : Party          -- current holder
+    ounces : Decimal        -- amount of gold
+  where
+    signatory issuer        -- issuer must authorize
+    observer holder         -- holder can see it
+
+    -- Transfer gold (like your transfer() function)
+    choice TransferGold : (ContractId GoldToken, ContractId GoldToken)
+      with
+        newHolder : Party
+        transferOunces : Decimal
+      controller holder      -- only holder can transfer
+        do
+          assert (transferOunces > 0.0)
+          assert (transferOunces <= ounces)
+          -- Create token for recipient
+          recipientToken <- create GoldToken with
+            issuer = issuer
+            holder = newHolder
+            ounces = transferOunces
+          -- Create remainder for sender
+          remainderToken <- create this with ounces = ounces - transferOunces
+          return (recipientToken, remainderToken)
+
+-- ═══════════════════════════════════════════════
+-- Deal Proposal (multi-party agreement pattern)
+-- Like your multi-sig: one party proposes, other accepts
+-- ═══════════════════════════════════════════════
+template DealProposal
+  with
+    seller     : Party
+    buyer      : Party
+    regulator  : Party
+    goldOunces : Decimal
+    pricePerOz : Decimal
+  where
+    signatory seller         -- only seller signs the proposal
+    observer buyer            -- buyer can see and respond
+
+    choice AcceptProposal : ContractId TradeFinanceDeal
+      controller buyer         -- buyer accepts = both parties agree
+        do
+          create TradeFinanceDeal with
+            seller = seller
+            buyer = buyer
+            regulator = regulator
+            goldOunces = goldOunces
+            pricePerOz = pricePerOz
+            status = "proposed"
+
+    choice RejectProposal : ()
+      controller buyer
+        do return ()
+
+-- ═══════════════════════════════════════════════
+-- Trade Finance Deal (your RWA platform in DAML)
+-- ═══════════════════════════════════════════════
+template TradeFinanceDeal
+  with
+    seller      : Party     -- gold seller
+    buyer       : Party     -- institutional buyer (MENA client)
+    regulator   : Party     -- compliance observer
+    goldOunces  : Decimal
+    pricePerOz  : Decimal
+    status      : Text      -- proposed/approved/settled/disputed
+  where
+    signatory seller, buyer    -- BOTH must agree (like multi-sig)
+    observer regulator         -- regulator sees but cannot act
+
+    ensure goldOunces > 0.0 && pricePerOz > 0.0
+
+    -- Regulator approves (like: function approve() onlyRegulator)
+    choice ApproveDeal : ContractId TradeFinanceDeal
+      controller regulator
+        do
+          assert (status == "proposed")
+          create this with status = "approved"
+
+    -- Buyer settles payment
+    choice SettleDeal : ContractId TradeFinanceDeal
+      controller buyer
+        do
+          assert (status == "approved")
+          create this with status = "settled"
+
+    -- Buyer can dispute before settlement
+    choice DisputeDeal : ContractId TradeFinanceDeal
+      with reason : Text
+      controller buyer
+        do
+          assert (status /= "settled")
+          create this with status = "disputed"
