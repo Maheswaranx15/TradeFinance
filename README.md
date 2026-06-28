@@ -19,6 +19,10 @@ The workflow is designed around DAML authorization:
 - Regulators observe deals and approve proposed trades.
 - Buyers settle approved deals or dispute unsettled deals.
 
+## Flow Diagram
+
+![TradeFinance DAML contract flow](docs/diagrams/trade-finance-flow.png)
+
 ## Project Structure
 
 ```text
@@ -27,6 +31,11 @@ The workflow is designed around DAML authorization:
 ├── daml
 │   ├── TradeFinance.daml
 │   └── Test.daml
+├── docs
+│   └── diagrams
+│       ├── trade-finance-flow.excalidraw
+│       ├── trade-finance-flow.png
+│       └── trade-finance-flow.svg
 ├── .dlint.yaml
 ├── .gitattributes
 └── .gitignore

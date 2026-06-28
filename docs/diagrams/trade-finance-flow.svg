@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="820" viewBox="0 0 1400 820" role="img" aria-labelledby="title desc">
+  <title id="title">TradeFinance DAML Contract Flow</title>
+  <desc id="desc">A self-explanatory workflow diagram showing seller proposal, buyer acceptance, regulator approval, buyer settlement, rejection, dispute, and authorization rules.</desc>
+  <defs>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#1e3a5f" />
+    </marker>
+    <marker id="arrow-orange" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#c2410c" />
+    </marker>
+    <marker id="arrow-amber" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#b45309" />
+    </marker>
+    <marker id="arrow-red" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#dc2626" />
+    </marker>
+    <style>
+      .title { font: 700 34px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; fill: #1e40af; }
+      .subtitle { font: 18px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; fill: #64748b; }
+      .label { font: 16px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; fill: #374151; text-anchor: middle; dominant-baseline: middle; }
+      .small { font: 15px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; fill: #64748b; }
+      .green { fill: #047857; }
+      .white { fill: #ffffff; }
+      .code { font: 15px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; fill: #22c55e; }
+    </style>
+  </defs>
+  <rect width="1400" height="820" fill="#ffffff" />
+
+  <text class="title" x="60" y="72">TradeFinance DAML Contract Flow</text>
+  <text class="subtitle" x="62" y="108">Seller proposes gold trade -&gt; Buyer accepts -&gt; Regulator approves -&gt; Buyer settles. Controllers enforce who can act.</text>
+
+  <line x1="148" y1="265" x2="1188" y2="265" stroke="#1e3a5f" stroke-width="3" />
+  <circle cx="148" cy="265" r="10" fill="#fed7aa" stroke="#c2410c" stroke-width="2" />
+  <circle cx="412" cy="265" r="10" fill="#60a5fa" stroke="#1e3a5f" stroke-width="2" />
+  <circle cx="652" cy="265" r="10" fill="#93c5fd" stroke="#1e3a5f" stroke-width="2" />
+  <circle cx="886" cy="265" r="10" fill="#fef3c7" stroke="#b45309" stroke-width="2" />
+  <circle cx="1188" cy="265" r="10" fill="#a7f3d0" stroke="#047857" stroke-width="2" />
+
+  <rect x="62" y="154" width="176" height="82" rx="10" fill="#fed7aa" stroke="#c2410c" stroke-width="2" />
+  <text class="label" x="150" y="186">Seller creates</text>
+  <text class="label" x="150" y="208">DealProposal</text>
+
+  <polygon points="425,146 522,195 425,244 328,195" fill="#60a5fa" stroke="#1e3a5f" stroke-width="2" />
+  <text class="label" x="425" y="194">Buyer accepts?</text>
+
+  <rect x="562" y="154" width="192" height="82" rx="10" fill="#93c5fd" stroke="#1e3a5f" stroke-width="2" />
+  <text class="label" x="658" y="184">TradeFinanceDeal</text>
+  <text class="label" x="658" y="207">status = proposed</text>
+
+  <rect x="806" y="154" width="176" height="82" rx="10" fill="#fef3c7" stroke="#b45309" stroke-width="2" />
+  <text class="label" x="894" y="184">Regulator calls</text>
+  <text class="label" x="894" y="207">ApproveDeal</text>
+
+  <rect x="1088" y="154" width="202" height="82" rx="10" fill="#a7f3d0" stroke="#047857" stroke-width="2" />
+  <text class="label" x="1189" y="184">Buyer settles</text>
+  <text class="label" x="1189" y="207">status = settled</text>
+
+  <line x1="240" y1="194" x2="326" y2="194" stroke="#c2410c" stroke-width="2" marker-end="url(#arrow-orange)" />
+  <line x1="522" y1="194" x2="560" y2="194" stroke="#1e3a5f" stroke-width="2" marker-end="url(#arrow-blue)" />
+  <text x="532" y="180" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="15" fill="#047857">yes</text>
+  <line x1="756" y1="194" x2="804" y2="194" stroke="#1e3a5f" stroke-width="2" marker-end="url(#arrow-blue)" />
+  <line x1="984" y1="194" x2="1086" y2="194" stroke="#b45309" stroke-width="2" marker-end="url(#arrow-amber)" />
+
+  <line x1="425" y1="244" x2="425" y2="420" stroke="#dc2626" stroke-width="2" stroke-dasharray="9 7" marker-end="url(#arrow-red)" />
+  <rect x="316" y="420" width="218" height="72" rx="10" fill="#fee2e2" stroke="#dc2626" stroke-width="2" />
+  <text class="label" x="425" y="448">RejectProposal</text>
+  <text class="label" x="425" y="470">ends proposal</text>
+
+  <path d="M660 238 L660 330 L828 330 L828 420" fill="none" stroke="#dc2626" stroke-width="2" stroke-dasharray="9 7" marker-end="url(#arrow-red)" />
+  <rect x="704" y="420" width="250" height="72" rx="10" fill="#fee2e2" stroke="#dc2626" stroke-width="2" />
+  <text class="label" x="829" y="448">Buyer may dispute</text>
+  <text class="label" x="829" y="470">before settlement</text>
+
+  <line x1="1189" y1="238" x2="1189" y2="420" stroke="#b91c1c" stroke-width="2" stroke-dasharray="9 7" />
+  <line x1="1173" y1="404" x2="1205" y2="436" stroke="#b91c1c" stroke-width="3" />
+  <line x1="1205" y1="404" x2="1173" y2="436" stroke="#b91c1c" stroke-width="3" />
+  <rect x="1062" y="420" width="254" height="72" rx="10" fill="#fecaca" stroke="#b91c1c" stroke-width="2" />
+  <text class="label" x="1189" y="448">Dispute after settled</text>
+  <text class="label" x="1189" y="470">must fail in tests</text>
+
+  <text class="small" x="64" y="545">Solid arrows show the normal settlement path. Dashed arrows show alternate or rejected paths enforced by contract assertions.</text>
+
+  <rect x="62" y="570" width="1254" height="198" rx="10" fill="#1e293b" stroke="#1e293b" stroke-width="2" />
+  <text class="white" x="88" y="616" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">Authorization rules encoded in DAML</text>
+  <text class="code" x="88" y="652">DealProposal: signatory seller, observer buyer</text>
+  <text class="code" x="88" y="675">AcceptProposal: controller buyer -&gt; creates TradeFinanceDeal(status = proposed)</text>
+  <text class="code" x="88" y="698">TradeFinanceDeal: signatory seller + buyer, observer regulator</text>
+  <text class="code" x="88" y="721">ApproveDeal: controller regulator, requires proposed | SettleDeal: controller buyer, requires approved</text>
+  <text class="code" x="88" y="744">DisputeDeal: controller buyer, allowed before settlement, blocked after settled</text>
+</svg>
